@@ -1,16 +1,3 @@
-// ***********************************************************************************
-// *				    Módulo GATEWAY                                   *
-// *                     Automação Em Tempo Real - Trabalho Final                    *
-// *                                                                                 *
-// *			               						     *
-// *		         Diego Santos Silva 	   - 2014056972                      *
-// *                     Ângelo 		   - 2009025894                      *
-// *										     *
-// *										     *		
-// *	              Professor André Paim Lemos - 2017/2		             *
-// *                                                                                 *
-// ***********************************************************************************
-
 #include "Gateway.h"
 
 using namespace boost::interprocess;
@@ -19,7 +6,7 @@ using namespace std;
 
 static const int MAX_LENGTH = 1024;
 int c = -1;
-int nClient = -1; // primeiro cliente ocupa a posição 0
+int nClient = -1; // primeiro cliente ocupa a posiï¿½ï¿½o 0
 position_t usuario[5000];
 active_users_t* ativo;
 mutex m;
@@ -61,7 +48,7 @@ void retiraUsuarioDaLista(position_t usuario)
 	int achou = 0;
 	for (int j = 0; j < nClient; j++)
 	{
-		// Retira o usuáerio da lista puxando todos os usuários "para o inicio" em 1 posição
+		// Retira o usuï¿½erio da lista puxando todos os usuï¿½rios "para o inicio" em 1 posiï¿½ï¿½o
 		if ((ativo->list[j].id == usuario.id && ativo->list[j].id != -1)|| achou == 1)
 		{
 			ativo->list[j] = ativo->list[j - 1];
@@ -107,7 +94,7 @@ private:
 			if (!ec)
 			{
 				// Separando os itens da mensagem
-				string hold[17];  //Serão lidos 17 tokens
+				string hold[17];  //Serï¿½o lidos 17 tokens
 				int countTokens = 0;
 				char *next_token = NULL;
 				char * pch;
@@ -154,9 +141,10 @@ private:
 			}
 			else
 			{
+				usuario[c].id=-1;
 				cout << "             Cliente desconectado: " << socket_.remote_endpoint() << endl;
-				//retiraUsuarioDaLista(usuario[c]);
-				//cout << "             Usuario com ID: " << usuario[c].id << " retirado da lista de usuarios ativos" << endl;
+				retiraUsuarioDaLista(usuario[c]);
+				cout << "             Usuario com ID: " << usuario[c].id << " retirado da lista de usuarios ativos" << endl;
 			}
 		});
 	}
@@ -201,10 +189,6 @@ private:
 
 int main(int argc, char* argv[])
 {
-	cout << "                                              GATEWAY                                            " << endl;
-	cout << "                                          Dezembro de 2017                                         " << endl;
-	cout << endl;
-	cout << "                                Aguardando conexoes na porta: 9001                               \n" << endl;
 	cout << endl;
 	shared_memory_object::remove("UsuariosAtivos");
 	shared_memory_object shm(open_or_create, "UsuariosAtivos", read_write);
@@ -215,7 +199,7 @@ int main(int argc, char* argv[])
 	try
 	{
 		boost::asio::io_service io_service;
-		server s(io_service, std::atoi("9001"));
+		server s(io_service, std::atoi("8080"));
 		io_service.run();
 	}
 	catch (std::exception& e)
